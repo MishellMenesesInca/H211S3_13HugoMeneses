@@ -131,35 +131,36 @@ WHERE CODUBI = @CODUBI
 END 
 GO 
 
-EXEC dbo.spInertUbigeo 
-						'150501','LIMA','CAÑETE','SAN VICENTE DE CAÑETE',
-						'150502','LIMA','CAÑETE','ASIA',
-						'150503','LIMA','CAÑETE','CALANGO',
-						'150504','LIMA','CAÑETE','CERRO AZUL',
-						'150505','LIMA','CAÑETE','CHILCA',
-						'150506','LIMA','CAÑETE','COAYLLO',
-						'150507','LIMA','CAÑETE','IMPERIAL',
-						'150508','LIMA','CAÑETE','LUNAHUANA',
-						'150509','LIMA','CAÑETE','MALA',
-						'150510','LIMA','CAÑETE','NUEVO IMPERIAL',
-						'150511','LIMA','CAÑETE','PACARAN',
-						'150512','LIMA','CAÑETE','QUILMANA',
-						'150513','LIMA','CAÑETE','SAN ANTONIO',
-						'150514','LIMA','CAÑETE','SAN LUIS',
-						'150515','LIMA','CAñETE','SANTA CRUZ DE FLORES',
-						'150516','LIMA','CAÑETE','ZUÑIGA';
+EXEC dbo.spInertUbigeo '150501','LIMA','CAÃ‘ETE','SAN VICENTE DE CAÃ‘ETE';
+EXEC dbo.spInertUbigeo	'150502','LIMA','CAÃ‘ETE','ASIA';
+EXEC dbo.spInertUbigeo 	'150503','LIMA','CAÃ‘ETE','CALANGO';
+EXEC dbo.spInertUbigeo 	'150504','LIMA','CAÃ‘ETE','CERRO AZUL';
+EXEC dbo.spInertUbigeo	'150505','LIMA','CAÃ‘ETE','CHILCA';
+EXEC dbo.spInertUbigeo	'150506','LIMA','CAÃ‘ETE','COAYLLO';
+EXEC dbo.spInertUbigeo	'150507','LIMA','CAÃ‘ETE','IMPERIAL';
+EXEC dbo.spInertUbigeo	'150508','LIMA','CAÃ‘ETE','LUNAHUANA';
+EXEC dbo.spInertUbigeo	'150509','LIMA','CAÃ‘ETE','MALA';
+EXEC dbo.spInertUbigeo	'150510','LIMA','CAÃ‘ETE','NUEVO IMPERIAL';
+EXEC dbo.spInertUbigeo	'150511','LIMA','CAÃ‘ETE','PACARAN';
+EXEC dbo.spInertUbigeo	'150512','LIMA','CAÃ‘ETE','QUILMANA';
+EXEC dbo.spInertUbigeo	'150513','LIMA','CAÃ‘ETE','SAN ANTONIO';
+EXEC dbo.spInertUbigeo	'150514','LIMA','CAÃ‘ETE','SAN LUIS';
+EXEC dbo.spInertUbigeo	'150515','LIMA','CAÃ±ETE','SANTA CRUZ DE FLORES';
+EXEC dbo.spInertUbigeo	'150516','LIMA','CAÃ‘ETE','ZUÃ‘IGA';
+EXEC dbo.spInertUbigeo	'150500','LIMA','LIMA','LIMA';
 
 
 
-CREATE PROCEDURE spInertCliente
+
+CREATE PROCEDURE spInertClient
 (
-		@IDCLI int ,
-        @NOMCLI varchar(50),
-		@APECLI varchar(50),
+		
+        @NOMCLI varchar(90),
+		@APECLI varchar(90),
 		@DNICLI char(8),
-        @EMACLI varchar(50),      
+        @EMACLI varchar(80),      
         @CELCLI char(9),
-        @DOMCLI varchar(50),       
+        @DOMCLI varchar(80),       
         @CODUBI char(6),
 		@ESTCLI char(1)
   )
@@ -167,36 +168,35 @@ CREATE PROCEDURE spInertCliente
  BEGIN 
 SET NOCOUNT ON 
 INSERT INTO  CLIENTE 
-(IDCLI, NOMCLI, APECLI, DNICLI, EMACLI,  CELCLI, DOMCLI, CODUBI, ESTCLI)
+(NOMCLI, APECLI, DNICLI, EMACLI,  CELCLI, DOMCLI, CODUBI, ESTCLI)
 VALUES 
-(@IDCLI ,@NOMCLI ,@APECLI ,@DNICLI, @EMACLI ,@CELCLI, @DOMCLI, @CODUBI, @ESTCLI)
+(@NOMCLI ,@APECLI ,@DNICLI, @EMACLI ,@CELCLI, @DOMCLI, @CODUBI, @ESTCLI)
 SELECT * FROM CLIENTE
-WHERE IDCLI = @IDCLI
 END 
 GO 
 
-EXEC dbo.spInertCliente 'Juan','Fajardo','74140385','juan@gmail.com','974862456','2 de mayo','150504','A',
-						'Angie Daniela','Alcala Peralta', '75412634','angie@gmail.com', '912364828', 'La Mar', '150506', 'A',
-						'Eduardo Dani','De la Cruz Ruiz', '15266739', 'eduardo@gmail.com', '924856021', 'Malvinas', '150506', 'A',
-						'Juan Cesar','Sanches Flores', '15738410', 'juan@hotmail.com', '912485039', '28 de Julio', '150506', 'A',
-						'Luis Hipólito','Del Pozo Fernandez', '71284509', 'luis@gmail.com', '923567489', 'Sucre', '150506', 'A',
-						'Pedro Ezequiel','Ordoñez Huaman', '16473980', 'pedro@hotmail.com', '915473976', '13 de Noviembre', '150506', 'A',
-						'Esmeralda Cristina','Canales Rojas', '71849029', 'esmeralda@hotmail.com', '926489187', 'Santa Rosa', '150501', 'A',
-						'Cecilio Alfredo','Sanchez Lara', '72839024', 'cecilio@gmail.com', '934827156', 'Las Palmas', '150501', 'A',
-						'Mario Rodrigo','Sanchez Alcala', '14780924', 'mario@gmail.com', '932984563', '2 de Mayo', '150506', 'A',
-						'Cristhian Jeremías','Suarez Frances', '15238976', 'cristhian@hotmail.com', '965374821', 'Caltopilla', '150507', 'A',
-						'Gustavo Sebastian','Ormeño Perales', '71256309', 'gustavo@gmail.com', '952839812', 'Ramos Larrea', '150506', 'A',
-						'Jose Ignacio','Rivas Escrivá', '71839273', 'jose.ignacio@hotmail.com', '923519649', '13 de Noviembre', '150506', 'A',
-						'Valerio Farré','Santiago Garcia', '72735095', 'valerio.santiago@hotmail.com', '913354032', 'Santa Rosa', '150501', 'A',
-						'Teodoro Joan','Velázquez Caballero', '72585674', 'teodoro.velazquez@gmail.com', '914739273', 'Las Palmas', '150501', 'A',
-						'Porfirio Colomer','León Rivero', '15728342', 'porfirio.leon@gmail.com', '942761039', '2 de Mayo', '150506', 'A',
-						'Jordana Tania','Blasco Sotelo', '71382462', 'jordana.blasco@hotmail.com', '921056093', 'Caltopilla', '150507', 'A',
-						'Soledad Celia','Casanova Gaya', '72639451', 'soledad.casanova@gmail.com', '972961350', 'Ramos Larrea', '150506', 'A';
+EXEC dbo.spInertClient 'Juan Pedro','Fajardo','74140385','juan@gmail.com','974862456','2 de mayo','150504','A';
+EXEC dbo.spInertClient 'Angie Daniela','Alcala Peralta', '75412634','angie@gmail.com', '912364828', 'La Mar', '150506', 'A';
+EXEC dbo.spInertClient 'Eduardo Dani','De la Cruz Ruiz', '15266739', 'eduardo@gmail.com', '924856021', 'Malvinas', '150506', 'A';
+EXEC dbo.spInertClient 'Juan Cesar','Sanches Flores', '15738410', 'juan@hotmail.com', '912485039', '28 de Julio', '150506', 'A';
+EXEC dbo.spInertClient 'Luis HipÃ³lito','Del Pozo Fernandez', '71284509', 'luis@gmail.com', '923567489', 'Sucre', '150506', 'A';
+EXEC dbo.spInertClient 'Pedro Ezequiel','OrdoÃ±ez Huaman', '16473980', 'pedro@hotmail.com', '915473976', '13 de Noviembre', '150506', 'A';
+EXEC dbo.spInertClient 'Esmeralda Cristina','Canales Rojas', '71849029', 'esmeralda@hotmail.com', '926489187', 'Santa Rosa', '150501', 'A';
+EXEC dbo.spInertClient 'Cecilio Alfredo','Sanchez Lara', '72839024', 'cecilio@gmail.com', '934827156', 'Las Palmas', '150501', 'A';
+EXEC dbo.spInertClient 'Mario Rodrigo','Sanchez Alcala', '14780924', 'mario@gmail.com', '932984563', '2 de Mayo', '150506', 'A';
+EXEC dbo.spInertClient 'Cristhian JeremÃ­as','Suarez Frances', '15238976', 'cristhian@hotmail.com', '965374821', 'Caltopilla', '150507', 'A';
+EXEC dbo.spInertClient 'Gustavo Sebastian','OrmeÃ±o Perales', '71256309', 'gustavo@gmail.com', '952839812', 'Ramos Larrea', '150506', 'A';
+EXEC dbo.spInertClient 'Jose Ignacio','Rivas EscrivÃ¡', '71839273', 'jose.ignacio@hotmail.com', '923519649', '13 de Noviembre', '150506', 'A';
+EXEC dbo.spInertClient 'Valerio FarrÃ©','Santiago Garcia', '72735095', 'valerio.santiago@hotmail.com', '913354032', 'Santa Rosa', '150501', 'A';
+EXEC dbo.spInertClient 'Teodoro Joan','VelÃ¡zquez Caballero', '72585674', 'teodoro.velazquez@gmail.com', '914739273', 'Las Palmas', '150501', 'A';
+EXEC dbo.spInertClient 'Porfirio Colomer','LeÃ³n Rivero', '15728342', 'porfirio.leon@gmail.com', '942761039', '2 de Mayo', '150506', 'A';
+EXEC dbo.spInertClient 'Jordana Tania','Blasco Sotelo', '71382462', 'jordana.blasco@hotmail.com', '921056093', 'Caltopilla', '150507', 'A';
+EXEC dbo.spInertClient 'Soledad Celia','Casanova Gaya', '72639451', 'soledad.casanova@gmail.com', '972961350', 'Ramos Larrea', '150506', 'A';
 
 
-CREATE PROCEDURE spInertUsuario
+CREATE PROCEDURE spInertUsuari
 (
-		@IDUSU int ,
+		
         @NOMUSU varchar(50),
 		@APEUSU varchar(50),
 		@DNIUSU char(8),
@@ -210,34 +210,33 @@ CREATE PROCEDURE spInertUsuario
  BEGIN 
 SET NOCOUNT ON 
 INSERT INTO  USUARIO
-(IDUSU, NOMUSU, APEUSU, DNIUSU, EMAUSU,  CELUSU, DOMUSU, CODUBI, ESTUSU)
+(NOMUSU, APEUSU, DNIUSU, EMAUSU,  CELUSU, DOMUSU, CODUBI, ESTUSU)
 VALUES 
-(@IDUSU, @NOMUSU, @APEUSU, @DNIUSU, @EMAUSU,  @CELUSU, @DOMUSU, @CODUBI, @ESTUSU)
+(@NOMUSU, @APEUSU, @DNIUSU, @EMAUSU,  @CELUSU, @DOMUSU, @CODUBI, @ESTUSU)
 SELECT * FROM USUARIO
-WHERE IDUSU = @IDUSU
 END 
 GO 
 
-EXEC dbo.spInertUsuario 'Jhianpol','Ramos','945643535','73423424','jhianpol.ramos@vallegrande.edu.pe','Av Los Laureles','150516','A',
-						'Sofia Inés', 'Bolaños Velázquez', '910007822','07750457', 'sofia.bolaños@gmail.com', 'Jiron O Higgins', '150501', 'A',
-						'Estefany Elisabeth', 'Romero Villa', '915647761', '25735046', 'estefany.romero@gmail.com', 'Santa Maria Alta', '150509', 'A',
-						'Juana Edelmira', 'Galván Pascual', '914575236', '21261108', 'juana.galván@gmail.com', 'Av 28 de Julio', '150506', 'A',
-						'Luciano Dafne', 'Rivera Campo', '915908420', '46967914', 'luciano.rivera@gmail.com', 'Av 2 de Mayo', '150506', 'A',
-						'Angela Estrella', 'Rodriguez León', '921367745', '07756532', 'angela.rodriguez@gmail.com', 'Cerro Libre', '150509', 'A',
-						'Rocio Jessica', 'Sotelo Lara', '916156023', '45055499', 'rocio.sotelo@gmail.com', 'Av Ayacucho', '150506', 'A',
-						'Felix Renato', 'Cruz Santiago', '913881305', '06224656', 'felix.cruz@gmail.com', 'Cementerio', '150506', 'A',
-						'Paul Donato', 'Ramos Roda', '925829547', '15448909', 'paul.ramos@gmail.com', 'Caltopilla', '150507', 'A',
-						'Emma Rosario', 'Redondo Abascal', '923547549', '16458936', 'emma.redondo@gmail.com', 'Urb. Mariscal Ramon Castilla', '150513', 'A',
-						'Bruno Julio', 'Robles Saavedra', '917420895', '12569827', 'bruno.robles@gmail.com', 'Jirón Junín', '150511', 'A',
-						'Reina Manuela', 'Cáceres Tejada', '927672301', '12673920', 'reina.caceres@gmail.com', 'Carmen Alto', '150509', 'A',
-						'Valerio Isaías', 'Ojeda Cárdenas', '910588801', '22378967', 'valerio.ojeda@gmail.com', 'Nuevo imperial', '150509', 'A',
-						'Jenaro Bautista', 'Acosta Menendez', '923883907', '45678017', 'jenaro.acosta@gmail.com', 'C. Miraflores', '150501', 'A',
-						'Cristhian Paco', 'Gámez Rodriguez', '922156180', '76890278', 'cristhian.gamez@gmail.com', 'Los Leones', '150503', 'A',
-						'Agustín Manu', 'Carrillo Navarro', '921451567', '12799398', 'agustin.carrillo@gmail.com', 'Av. Arequipa', '150511', 'A',
-						'Jimena Ale', 'Delgado Montoya', '910244145', '13578997', 'jimena.delgado@gmail.com', 'Asunción 8', '150506', 'I',
-						'Maxi Victor', 'Torres Quintanilla', '910411462', '79628176', 'maxi.torres@gmail.com', 'Calles los claveles', '150503', 'A',
-						'Pedro Max', 'Quispe Avalos', '921381283', '76223469', 'pedro.quispe@gmail.com', 'Calle las Violetas', '150503', 'A',
-						'Xiomara Valentina', 'Brañes Torres', '912383824', '15467831', 'xiomara.brañes@vallegrande.edu.pe', 'Santa Maria Alta', '150509', 'A';
+EXEC dbo.spInertUsuari 'Jhianpol','Ramos','945643535','73423424','jhianpol.ramos@vallegrande.edu.pe','Av Los Laureles','150516','A';
+EXEC dbo.spInertUsuari 'Sofia InÃ©s', 'BolaÃ±os VelÃ¡zquez', '910007822','07750457', 'sofia.bolaÃ±os@gmail.com', 'Jiron O Higgins', '150501', 'A';
+EXEC dbo.spInertUsuari 'Estefany Elisabeth', 'Romero Villa', '915647761', '25735046', 'estefany.romero@gmail.com', 'Santa Maria Alta', '150509', 'A';
+EXEC dbo.spInertUsuari 'Juana Edelmira', 'GalvÃ¡n Pascual', '914575236', '21261108', 'juana.galvÃ¡n@gmail.com', 'Av 28 de Julio', '150506', 'A';
+EXEC dbo.spInertUsuari 'Luciano Dafne', 'Rivera Campo', '915908420', '46967914', 'luciano.rivera@gmail.com', 'Av 2 de Mayo', '150506', 'A';
+EXEC dbo.spInertUsuari 'Angela Estrella', 'Rodriguez LeÃ³n', '921367745', '07756532', 'angela.rodriguez@gmail.com', 'Cerro Libre', '150509', 'A';
+EXEC dbo.spInertUsuari 'Rocio Jessica', 'Sotelo Lara', '916156023', '45055499', 'rocio.sotelo@gmail.com', 'Av Ayacucho', '150506', 'A';
+EXEC dbo.spInertUsuari 'Felix Renato', 'Cruz Santiago', '913881305', '06224656', 'felix.cruz@gmail.com', 'Cementerio', '150506', 'A';
+EXEC dbo.spInertUsuari 'Paul Donato', 'Ramos Roda', '925829547', '15448909', 'paul.ramos@gmail.com', 'Caltopilla', '150507', 'A';
+EXEC dbo.spInertUsuari 'Emma Rosario', 'Redondo Abascal', '923547549', '16458936', 'emma.redondo@gmail.com', 'Urb. Mariscal Ramon Castilla', '150513', 'A';
+EXEC dbo.spInertUsuari 'Bruno Julio', 'Robles Saavedra', '917420895', '12569827', 'bruno.robles@gmail.com', 'JirÃ³n JunÃ­n', '150511', 'A';
+EXEC dbo.spInertUsuari 'Reina Manuela', 'CÃ¡ceres Tejada', '927672301', '12673920', 'reina.caceres@gmail.com', 'Carmen Alto', '150509', 'A';
+EXEC dbo.spInertUsuari 'Valerio IsaÃ­as', 'Ojeda CÃ¡rdenas', '910588801', '22378967', 'valerio.ojeda@gmail.com', 'Nuevo imperial', '150509', 'A';
+EXEC dbo.spInertUsuari 'Jenaro Bautista', 'Acosta Menendez', '923883907', '45678017', 'jenaro.acosta@gmail.com', 'C. Miraflores', '150501', 'A';
+EXEC dbo.spInertUsuari 'Cristhian Paco', 'GÃ¡mez Rodriguez', '922156180', '76890278', 'cristhian.gamez@gmail.com', 'Los Leones', '150503', 'A';
+EXEC dbo.spInertUsuari 'AgustÃ­n Manu', 'Carrillo Navarro', '921451567', '12799398', 'agustin.carrillo@gmail.com', 'Av. Arequipa', '150511', 'A';
+EXEC dbo.spInertUsuari	'Jimena Ale', 'Delgado Montoya', '910244145', '13578997', 'jimena.delgado@gmail.com', 'AsunciÃ³n 8', '150506', 'I';
+EXEC dbo.spInertUsuari	'Maxi Victor', 'Torres Quintanilla', '910411462', '79628176', 'maxi.torres@gmail.com', 'Calles los claveles', '150503', 'A';
+EXEC dbo.spInertUsuari	'Pedro Max', 'Quispe Avalos', '921381283', '76223469', 'pedro.quispe@gmail.com', 'Calle las Violetas', '150503', 'A';
+EXEC dbo.spInertUsuari	'Xiomara Valentina', 'BraÃ±es Torres', '912383824', '15467831', 'xiomara.braÃ±es@vallegrande.edu.pe', 'Santa Maria Alta', '150509', 'A';
 
 
 
@@ -249,47 +248,46 @@ EXEC dbo.spInertUsuario 'Jhianpol','Ramos','945643535','73423424','jhianpol.ramo
 						--Procedure Pizza
 
 
-CREATE PROCEDURE spInertPizza
+CREATE PROCEDURE spInertPiz
 (
-		@IDPIZ int ,
+		
         @NOMPIZ varchar(60),
 		@TAMPIZ varchar(30),
-		@PREPIZ decimal(5,2)     
+		@PREPIZ decimal(5,2),
+		@ESTPIZ char(1)
   )
  AS 
  BEGIN 
 SET NOCOUNT ON 
 INSERT INTO  PIZZA
-(NOMPIZ,TAMPIZ,PREPIZ)
+(NOMPIZ,TAMPIZ,PREPIZ,ESTPIZ)
 VALUES 
-(@NOMPIZ,@TAMPIZ,@PREPIZ)
+(@NOMPIZ,@TAMPIZ,@PREPIZ,@ESTPIZ)
 SELECT * FROM PIZZA
-WHERE IDPIZ = @IDPIZ
 END 
 GO 
 
-EXEC dbo.spInertPizza
-'Americana','Familiar','60','A',
-'Americana','Mediana','40','A',
-'Americana','Personal','22','A',
-'Huawaiana','Familiar','60','A',
-'Huawaiana','Mediana','40','A',
-'Huawaiana','Personal','22','A',
-'Cabanosi','Familiar','60','A',
-'Cabanosi','Mediana','40','A',
-'Cabanosi','Personal','22','A',
-'Vegetariana','Familiar','60','A',
-'Vegetariana','Mediana','40','A',
-'Vegetariana','Personal','22','A',
-'Salami','Familiar','60','A',
-'Salami','Mediana','40','A',
-'Salami','Personal','22','A';
+EXEC dbo.spInertPiz 'Americana','Familiar','60','A';
+EXEC dbo.spInertPiz 'Americana','Mediana','40','A';
+EXEC dbo.spInertPiz'Americana','Personal','22','A';
+EXEC dbo.spInertPiz'Huawaiana','Familiar','60','A';
+EXEC dbo.spInertPiz'Huawaiana','Mediana','40','A';
+EXEC dbo.spInertPiz'Huawaiana','Personal','22','A';
+EXEC dbo.spInertPiz'Cabanosi','Familiar','60','A';
+EXEC dbo.spInertPiz'Cabanosi','Mediana','40','A';
+EXEC dbo.spInertPiz'Cabanosi','Personal','22','A';
+EXEC dbo.spInertPiz'Vegetariana','Familiar','60','A';
+EXEC dbo.spInertPiz'Vegetariana','Mediana','40','A';
+EXEC dbo.spInertPiz'Vegetariana','Personal','22','A';
+EXEC dbo.spInertPiz'Salami','Familiar','60','A';
+EXEC dbo.spInertPiz'Salami','Mediana','40','A';
+EXEC dbo.spInertPiz'Salami','Personal','22','A';
 
 --Procedure VENTA
 
 CREATE PROCEDURE spInertVenta
 (
-  @IDVEN int,
+  
   @FECVEN date,
   @IDUSU int,
   @IDCLI int,
@@ -303,27 +301,26 @@ INSERT INTO  VENTA
 VALUES 
 (@FECVEN,@IDUSU, @IDCLI,@TOTVEN)
 SELECT * FROM VENTA
-WHERE IDVEN = @IDVEN
+
 END 
 GO 
 
-EXEC dbo.spInertVenta
-'2022-06-12','1','6','100.00',
-'2022-06-12','1','4','100.00',
-'2022-06-12','2','2','100.00',
-'2022-06-12','2','5','100.00',
-'2022-06-12','2','4','100.00',
-'2022-06-12','1','3','100.00',
-'2022-06-12','1','9','100.00',
-'2022-06-12','2','1','100.00',
-'2022-06-12','1','10','100.00',
-'2022-06-12','2','11','100.00';
+EXEC dbo.spInertVenta'2022-06-12','1','6','100.00';
+EXEC dbo.spInertVenta'2022-06-12','1','4','100.00';
+EXEC dbo.spInertVenta'2022-06-12','2','2','100.00';
+EXEC dbo.spInertVenta'2022-06-12','2','5','100.00';
+EXEC dbo.spInertVenta'2022-06-12','2','4','100.00';
+EXEC dbo.spInertVenta'2022-06-12','1','3','100.00';
+EXEC dbo.spInertVenta'2022-06-12','1','9','100.00';
+EXEC dbo.spInertVenta'2022-06-12','2','1','100.00';
+EXEC dbo.spInertVenta'2022-06-12','1','10','100.00';
+EXEC dbo.spInertVenta'2022-06-12','2','11','100.00';
 
 
 
 CREATE PROCEDURE spInertVentaDetalle
 (
-  @IDVENDET int,
+  
   @CANVENDET int,
   @SUBVENDET decimal(5,2),
   @IDPIZ int,
@@ -337,21 +334,20 @@ INSERT INTO  VENTA_DETALLE
 VALUES 
 (@CANVENDET,@SUBVENDET,@IDPIZ,@IDVEN)
 SELECT * FROM VENTA_DETALLE
-WHERE IDVENDET = @IDVENDET
+
 END 
 GO 
 
-EXEC dbo.spInertVentaDetalle
-'5','110.00','3','1',
-'3','66.00','3','1',
-'1','22.00','3','1',
-'1','22.00','6','2',
-'2','44.00','6','2',
-'3','66.00','6','1',
-'1','40.00','2','2',
-'1','40.00','2','1',
-'2','120.00','1','2',
-'1','60.00','1','1';
+EXEC dbo.spInertVentaDetalle'5','110.00','3','1';
+EXEC dbo.spInertVentaDetalle'3','66.00','3','1',
+EXEC dbo.spInertVentaDetalle'1','22.00','3','1',
+EXEC dbo.spInertVentaDetalle'1','22.00','6','2',
+EXEC dbo.spInertVentaDetalle'2','44.00','6','2',
+EXEC dbo.spInertVentaDetalle'3','66.00','6','1',
+EXEC dbo.spInertVentaDetalle'1','40.00','2','2',
+EXEC dbo.spInertVentaDetalle'1','40.00','2','1',
+EXEC dbo.spInertVentaDetalle'2','120.00','1','2',
+EXEC dbo.spInertVentaDetalle'1','60.00','1','1';
 
 
 
