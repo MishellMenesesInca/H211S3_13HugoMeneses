@@ -14,8 +14,8 @@ public class Conexion {
     
     public static Connection conectar() throws Exception {
         try {
-            String user = "sql";
-            String pwd = "123";
+            String user = "sa";
+            String pwd = "@abc123@";
             String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
             String url = "jdbc:sqlserver://localhost:1433;databaseName=bdPizzaHut";
             Class.forName(driver).newInstance();
