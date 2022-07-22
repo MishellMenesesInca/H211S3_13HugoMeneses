@@ -1,0 +1,262 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../resources/Plantilla.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+    <ui:define name="content">
+        <h:head>
+            <title>PIZZA HUT</title>
+            <f:event listener="#{usuarioC.listar()}" type="preRenderView" />
+        </h:head>
+        <p:growl id="mensajes" severity="info,fatal" showSummary="true" showDetail="true"/>
+
+        <h:body>
+            <p:growl id="mensaje" showDetail="true"/>
+            <p:growl id="growl-sticky" for="sticky-key" showDetail="true" sticky="true" />
+            
+            <p:spacer height="0"/>  
+
+            <!-- Botón nuevo -->
+            <h:form>
+                <p:toolbar>
+                    <p:toolbarGroup>
+                        <p:commandButton value="Nuevo" icon="pi pi-plus" 
+                                         update=":RegUsu" oncomplete="PF('wdlgRegistro').show()"
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                            <p:resetInput target=":RegUsu"/>
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                    <p:toolbarGroup>
+                        <p:commandButton value="GENERAR REPORTE" actionListener="#{usuarioC.reporteVen()}"  onclick="this.form.target = '_blank'"
+                                         ajax="false" />
+                        <p:commandButton value="Excel" icon="pi pi-file-excel" styleClass="p-mr-2 p-mb-2">
+                            <p:dataExporter type="xls" target=":frmTablaUsu:tablaUsu" fileName="ListaDelVendedor_XLS" pageOnly="true" />
+                        </p:commandButton>   
+                    </p:toolbarGroup>
+                </p:toolbar>
+            </h:form>
+
+
+            <center>    
+                <p:growl showDetail="true" id="messages" >
+                    <p:autoUpdate/> 
+                </p:growl>
+
+
+                <!--        Formulario del Usuario    >-->   
+                <p:dialog header="Registrar Vendedor" widgetVar="wdlgRegistro" id="dlgRegistro">
+                    <h:form id="RegUsu" prependId="false">                 
+                        <p:panelGrid columns="3" >
+                            <p:outputLabel value="Nombres" />                    
+                            <p:inputText id="NOMVEND" value="#{usuarioC.usuario.nombre}" required="true" requiredMessage="Digite sus Nombres">
+                                <p:keyFilter regEx="/[A-Z_a-z_ñ_á_é_í_ó_ú_ ]/"/>
+                            </p:inputText>
+                            <p:message  for="NOMVEND"/>
+
+                            <p:outputLabel value="Apellidos" />
+                            <p:inputText id="APEVEND" value="#{usuarioC.usuario.apellidos}" required="true" requiredMessage="Digite sus apellidos">
+                                <p:keyFilter regEx="/[A-Z_a-z_ñ_á_é_í_ó_ú_ ]/"/>
+                            </p:inputText>
+                            <p:message  for="APEVEND"/>
+
+                            <p:outputLabel value="Celular" />
+                            <p:inputText id="CEL" placeholder="Numérico de 9 dígitos" value="#{usuarioC.usuario.celular}" onkeyup="validarCELULAR()" required="true" maxlength="9" requiredMessage="Digite su celular">
+                                <p:keyFilter regEx="/[0-9]/" />
+                            </p:inputText>
+                            <p:message  for="CEL"/>
+
+                            <p:outputLabel value="DNI" />
+                            <p:inputText id="DNI" placeholder="Numérico de 8 dígitos" value="#{usuarioC.usuario.dni}" onkeyup="validarDNII()" required="true" maxlength="8" requiredMessage="Digite su DNI">
+                                <p:keyFilter regEx="/[0-9]/" />
+                                <f:validator validatorId="dniVALID"/>
+                                <p:ajax update="msgDNIVEND" event="keyup" delay="800"/>
+                            </p:inputText>
+                            <p:message id="msgDNIVEND" for="DNI"/>
+
+                            <p:outputLabel value="Email" />  
+                            <p:inputText id="EMAVEND" value="#{usuarioC.usuario.email}" required="true" requiredMessage="Digite su correo">
+                                <f:validator validatorId="vCorreo" />
+                                <p:ajax   delay="800" event="keyup" />
+                                <p:tooltip  value="Digite su Correo" trackMouse="focus"/>
+                            </p:inputText>
+                            <p:message  for="EMAVEND"/>
+
+                            <p:outputLabel value="Domicilio" />  
+                            <p:inputText id="DOMVEND" value="#{usuarioC.usuario.domicilio}" required="true" requiredMessage="Digite su domicilio">
+                                <p:keyFilter regEx="/[A-Z_a-z_ñ_á_é_í_ó_ú_._0-9_ ]/"/>
+                            </p:inputText>
+                            <p:message  for="DOMVEND"/>
+
+                            <p:outputLabel value="DISTRITO/DEPARTAMENTO/PROVINCIA" />  
+                            <p:selectOneMenu id="ubi" value="#{usuarioC.usuario.CODUBI}" style="width:300px"
+                                             filter="true" filterMatchMode="contains"  requiredMessage="Seleccione el ubigeo" >
+                                <f:selectItem noSelectionOption="true" itemLabel="seleccione" itemValue="#{null}"/>
+                                <f:selectItems value="#{ubigeoC.listadoUbigeo}" var="ubi"
+                                               itemValue="#{ubi.CODUBI}"
+                                               itemLabel="#{ubi.DISUBI}- #{ubi.DEPUBI}- #{ubi.PROUBI}"/>
+                            </p:selectOneMenu>
+                            <p:message  for="ubi"/>
+                            <p:commandButton id="btnRegistrar" value="Registrar" actionListener="#{usuarioC.registrar()}"
+                                             update="RegUsu :frmTablaUsu:tablaUsu"                                          
+                                             widgetVar="btnregistrarvalidator"
+                                             oncomplete="if(!args.validationFailed)PF('wdlgRegistro').hide();">
+                                <p:confirm header="Confirmación" message="¿Deseas Registar?" icon="ui-icon-alert"/>
+                                <p:resetInput target="RegUsu"/>
+                            </p:commandButton>                 
+                            <p:commandButton value="Cancelar" immediate="true" oncomplete="PF('wdlgRegistro').hide();" />
+                        </p:panelGrid>   
+                    </h:form>
+                </p:dialog> 
+                <!--        Fin del Formulario Usuario    >-->
+
+
+                <p:spacer height="0"/>        
+
+                <!--        Listado del Usuario    >-->              
+                <h:form id="frmTablaUsu">
+                    <p:dataTable id="tablaUsu" var="lista" value="#{usuarioC.lstUsuario}" 
+                                 rows="10"
+                                 paginator="true" widgetVar="tblUsuario" selection="#{usuarioC.usuario}"
+                                 resizableColumns="true"
+                                 selectionMode="single"
+                                 rowKey="#{lista.codigo}"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                 rowsPerPageTemplate="5,10,15"
+                                 rowStyleClass="registroVinculado" style="width:100%">   
+                        <f:facet name="header">
+                            <center><h1>Listado de Vendedores</h1></center>
+                            <div >
+                                <h:form>
+                                    <center>
+                                        <p:outputLabel value="FILTRO POR: " style="align-content: center; alignment-adjust: central; "/>
+
+                                        <p:selectOneMenu value="#{usuarioC.tipo}" style="width: 100px">
+                                            <f:selectItem itemValue="1" itemLabel="Activos"/> 
+                                            <f:selectItem itemValue="2" itemLabel="Inactivos"/>
+                                            <f:selectItem itemValue="3" itemLabel="Todos"/>
+                                            <p:ajax listener="#{usuarioC.listar()}" update=":frmTablaUsu:tablaUsu"/>
+                                        </p:selectOneMenu>
+                                    </center>
+                                </h:form>
+                            </div>
+
+                        </f:facet>
+                        <p:column headerText="Apellidos y Nombres"  style="width:170px" filterBy="#{lista.nombre}">
+                            <h:outputText value="#{lista.apellidos.concat(' ').concat(lista.nombre)}" />
+                        </p:column>
+                        <p:column headerText="Celular" style="width:50px" filterBy="#{lista.celular}">
+                            <h:outputText value="#{lista.celular}"/>
+                        </p:column>
+                        <p:column headerText="DNI" style="width:40px" filterBy="#{lista.dni}">
+                            <h:outputText value="#{lista.dni}" />
+                        </p:column> 
+                        <p:column headerText="Email" style="width:150px" filterBy="#{lista.email}">
+                            <h:outputText value="#{lista.email}" />
+                        </p:column> 
+                        <p:column headerText="Domicilio" style="width:100px" filterBy="#{lista.domicilio}">
+                            <h:outputText value="#{lista.domicilio}" />
+                        </p:column> 
+                        <p:column headerText="Ubicación" style="width:150px" filterBy="#{lista.ubigeo}">
+                            <h:outputText value="#{lista.DISUBI}-#{lista.PROUBI}-#{lista.DEPUBI}" />
+                        </p:column> 
+                        <p:column style="width: 40px">
+                           
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                            </p:confirmDialog>
+                        </p:column>
+
+                        <f:facet name="footer">
+                            EN TOTAL HAY #{fn:length(usuarioC.lstUsuario)} REGISTROS.
+                        </f:facet>
+                    </p:dataTable> 
+
+                    <p:contextMenu for="tablaUsu">
+                        <p:menuitem value="Modificar" icon="pi pi-pencil" oncomplete="PF('wdlgDatos').show()" update=":frmModificar">
+                        </p:menuitem>
+                        <p:menuitem value="Eliminar" icon="pi pi-trash" actionListener="#{usuarioC.eliminar()}" update=":frmTablaUsu:tablaUsu mensaje">
+                            <p:confirm header="Confirmación" message="¿Deseas eliminar?"/>                         
+                        </p:menuitem>
+                        <p:menuitem value="Restaurar" icon="pi pi-undo" actionListener="#{usuarioC.restaurar()}" update=":frmTablaUsu:tablaUsu mensaje">
+                            <p:confirm header="Confirmación" message="¿Deseas restaurar?"/>                         
+                        </p:menuitem>
+                    </p:contextMenu>
+
+                </h:form>
+                <!--        Fin del Listado Usuario    >-->  
+
+
+                <!--        Dialogo del Usuario    >-->
+                <p:dialog header="Datos del Vendedor" widgetVar="wdlgDatos" id="dlgDatos">
+                    <h:form id="frmModificar">
+
+                        <p:panelGrid columns="2" >
+                            <p:outputLabel value="Nombre" />                    
+                            <p:inputText value="#{usuarioC.usuario.nombre}" required="true">
+                                <p:keyFilter regEx="/[A-Z_a-z_ñ_á_é_í_ó_ú_ ]/"/>
+                            </p:inputText>
+
+                            <p:outputLabel value="Apellido Paterno" />
+                            <p:inputText value="#{usuarioC.usuario.apellidos}" required="true">
+                                <p:keyFilter regEx="/[A-Z_a-z_ñ_á_é_í_ó_ú_ ]/"/>
+                            </p:inputText>
+
+                            <p:outputLabel value="Celular" />
+                            <p:inputText placeholder="Numérico de 9 dígitos" value="#{usuarioC.usuario.celular}"  required="true" maxlength="9" >
+                                <p:keyFilter regEx="/[0-9]/" />
+                            </p:inputText>
+
+                            <p:outputLabel value="DNI" />
+                            <p:inputText placeholder="Numérico de 8 dígitos" value="#{usuarioC.usuario.dni}"  required="true" maxlength="8" >
+                                <p:keyFilter regEx="/[0-9]/" />
+                            </p:inputText>
+
+                            <p:outputLabel value="Email" />  
+                            <p:inputText value="#{usuarioC.usuario.email}" required="true">
+                            </p:inputText>
+
+                            <p:outputLabel value="Domicilio" />  
+                            <p:inputText value="#{usuarioC.usuario.domicilio}" required="true">
+                                <p:keyFilter regEx="/[A-Z_a-z_ñ_á_é_í_ó_ú_._0-9_ ]/"/>
+                            </p:inputText>
+
+                            <p:outputLabel value="DIS/DEP/PROV" />  
+                            <p:selectOneMenu id="ubi" value="#{usuarioC.usuario.CODUBI}" style="width:300px"
+                                             filter="true" filterMatchMode="contains"  requiredMessage="Seleccione el ubigeo" >
+                                <f:selectItem noSelectionOption="true" itemLabel="seleccione" itemValue="#{null}"/>
+                                <f:selectItems value="#{ubigeoC.listadoUbigeo}" var="ubi"
+                                               itemValue="#{ubi.CODUBI}"
+                                               itemLabel="#{ubi.DISUBI}- #{ubi.DEPUBI}- #{ubi.PROUBI}"/>
+                            </p:selectOneMenu>
+                            <p:message  for="ubi"/>
+
+                            <p:commandButton id="btnModificar" value="Modificar" actionListener="#{usuarioC.modificar()}" 
+                                             update="frmModificar :frmTablaUsu:tablaUsu" 
+                                             oncomplete="if(!args.validationFailed)PF('wdlgDatos').hide();">
+                                <p:confirm header="Confirmación" message="¿Deseas Modificar?" icon="ui-icon-alert"/>
+                            </p:commandButton>  
+                            <p:commandButton value="Cancelar" immediate="true" oncomplete="PF('wdlgDatos').hide();" />
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
+                                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary" icon="pi pi-times"/>
+                            </p:confirmDialog>
+                        </p:panelGrid> 
+                    </h:form>
+
+                </p:dialog>
+                <!--        Fin del Dialogo del Usuario    >-->
+
+            </center>
+        </h:body>
+        <h:outputScript library="js" name="..//resources/js/spanishLocales.js"/>
+
+    </ui:define>
+
+</ui:composition>

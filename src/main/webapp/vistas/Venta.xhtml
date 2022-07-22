@@ -1,0 +1,214 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../resources/Plantilla.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+    <ui:define name="content">
+        <h:head>
+            <f:event listener="#{ventadetalleC.listarVenta()}" type="preRenderView"/>
+            <f:event listener="#{usuarioC.listar()}" type="preRenderView" />
+            <f:event listener="#{clienteC.listar()}" type="preRenderView" />
+            <f:event listener="#{pizzaC.listar()}" type="preRenderView" />
+            <title>Venta</title>
+        </h:head>
+        <center>
+            <p:growl showDetail="true" id="messages">
+                <p:autoUpdate/>
+            </p:growl>
+        </center>
+
+        <h:body>
+
+            <!--        <h:form> 
+                        <p:menubar>
+                            <p:menuitem value="Vendedores" outcome="Usuario" />
+                            <p:menuitem value="Prendas" outcome="Prendas"/>
+                            <p:menuitem value="Venta" outcome="Venta"/>
+                            <p:menuitem value="Cliente" outcome="Cliente"/>
+            
+                        </p:menubar>
+                    </h:form>-->
+            <center>
+                <h:form>
+                    <h1 style="color:black; font-weight:bold; font-size:40px">GENERACIÓN DE VENTA</h1>              
+                </h:form>
+            </center>
+
+            <center>
+                <h:form id="frmVenta">
+                    <p:panelGrid columns="2" styleClass="ui-noborder">
+
+                        <p:outputLabel value="Cliente" for="cli" style="color:black; font-weight:bold; font-size:16px"/>
+                        <p:selectOneMenu id="cli" value="#{ventadetalleC.venta.cliente.codigo}" style="width:300px"
+                                         filter="true" filterMatchMode="contains" required="true" requiredMessage="Seleccione el Cliente" >
+                            <f:selectItem noSelectionOption="true" itemLabel="Seleccione" itemValue="#{null}"/>
+                            <f:selectItems value="#{clienteC.lstCliente}" var="cliente"
+                                           itemValue="#{cliente.codigo}"
+                                           itemLabel="#{cliente.nombre}
+                                           #{cliente.apellidos}"/>
+                        </p:selectOneMenu>
+
+
+                        <p:outputLabel value="Vendedor" for="usu" style="color:black; font-weight:bold; font-size:16px"/>
+                        <p:selectOneMenu id="usu" value="#{ventadetalleC.venta.usuario.codigo}" style="width:300px"
+                                         filter="true" filterMatchMode="contains" required="true" requiredMessage="Seleccione el Usuario" >
+                            <f:selectItem noSelectionOption="true" itemLabel="Seleccione" itemValue="#{null}"/>
+                            <f:selectItems value="#{usuarioC.lstUsuario}" var="usuario"
+                                           itemValue="#{usuario.codigo}"
+                                           itemLabel="#{usuario.nombre}
+                                           #{usuario.apellidos}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="Pizza" for="piz" style="color:black; font-weight:bold; font-size:16px"/>
+                        <p:selectOneMenu id="piz" value="#{ventadetalleC.ventadetalle.pizza.codigo}" style="width:300px" 
+                                         filter="true" filterMatchMode="contains" required="true" requiredMessage="Ingrese el Producto" >
+                            <f:selectItem noSelectionOption="true" itemLabel="Seleccione" itemValue="#{null}"/>
+                            <f:selectItems value="#{pizzaC.lstPizza}" var="pizza"
+                                           itemValue="#{pizza.codigo}"
+                                           itemLabel="#{pizza.nombre} - #{pizza.tamaño} - #{pizza.precio}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel  value="Cantidad" for="cantidad" style="color:black; font-weight:bold; font-size:16px"/>
+                        <p:spinner id="cantidad" value="#{ventadetalleC.ventadetalle.CANVENDET}" max="10" min="1"
+                                   required="true" requiredMessage="Ingrese la Cantidad" maxlength="2" style="width: 165px">
+                        </p:spinner>
+
+                        <p:outputLabel value="Fecha" for="fecha" style="color:black; font-weight:bold; font-size:16px"/>
+                        <p:calendar id="fecha" value="#{ventadetalleC.venta.FECVEN}"
+                                    pattern="dd/MM/yyyy" navigator="true" locale="de" maxdate="@now"
+                                    required="true" requiredMessage="Ingrese la fecha" size="18">
+                        </p:calendar>
+                    </p:panelGrid>
+                    <center>
+                        <p/>
+                        <p:commandButton value="Nuevo" actionListener="#{ventadetalleC.limpiar()}" update="frmVenta" style="font-weight:bold; font-size:16px; margin: 2px" />
+                        <p:commandButton value="Agregar" actionListener="#{ventadetalleC.aumentarFila()}" update="frmVenta :frmVentaDetalle"  icon="pi pi-plus" style="font-weight:bold; font-size:16px; margin: 2px"/>
+                        <p:commandButton value="Anular" actionListener="#{ventadetalleC.anular()}" update="frmVenta" icon="pi pi-times" style="font-weight:bold; font-size:16px; margin: 2px"/>
+                    </center>
+                </h:form>
+            </center>
+            <!--            Fin del Formulario Prenda-->
+            <p:spacer height="0"/>
+
+
+            <!--                    listado de Prenda     -->
+            <h:form id="frmVentaDetalle">
+                <center>
+                    <p:dataTable var="vendet" id="tablaVentaDetalle" value="#{ventadetalleC.listadoVentaDetalle}"
+                                 emptyMessage="La lista esta sin pizzas a mostrar :(" style="width: 80%;"
+                                 editable="true" editMode="cell" editInitEvent="dblclick">
+                        <p:column style="width:80px; color:black" headerText="ID">
+                            <h:outputText value="#{vendet.IDPIZ}"/>
+                        </p:column>
+                        <p:column style="width:80px; color:black" headerText="PIZZA">
+                            <h:outputText value="#{vendet.NOMPIZ}"/>
+                        </p:column>                        
+                        <p:column style="width:80px; color:black" headerText="TAMAÑO">
+                            <h:outputText value="#{vendet.TAMPIZ}"/>
+                        </p:column>
+                        <p:column style="width:80px; color:black" headerText="PRECIO">
+                            <h:outputText value="#{vendet.pizza.precio}"/>
+                        </p:column>
+                        <p:column style="width:50px; color:black" headerText="SUBTOTAL">
+                            <h:outputText value="#{vendet.SUBVENDET}">
+                                <f:convertNumber type="currency" currencySymbol="S/. " minFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="" style="width:20px; color:black" exportable="false">
+                            <p:column>
+                                <p:commandButton icon="pi pi-trash" actionListener="${ventadetalleC.eliminarFila(vendet)}" update="frmVentaDetalle"/>
+                            </p:column>
+                        </p:column>
+                    </p:dataTable>
+                </center>
+                <p:separator/>
+                <h:panelGrid id="total" columns="2" style="font-size: 25px; margin: 0 auto; color: black">
+                    TOTAL = 
+                    <h:outputText style="align-content: center; alignment-adjust: central; font-weight:bold"
+                                  value="#{ventadetalleC.venta.TOTVEN}">
+                        <f:convertNumber type="currency" currencySymbol="S/ " minFractionDigits="2"/>
+                    </h:outputText>
+                </h:panelGrid>
+                <p:separator/>
+            </h:form>     
+
+
+
+
+            <h:form id="frmListaVenta">
+                <center>
+                    <p:panelGrid columns="5">
+                        <p:outputLabel value="Realizar Venta"/>
+                        <p:commandButton id="Registrar" actionListener="#{ventadetalleC.registrarVenta()}" value="Registrar" icon="pi pi-save"
+                                         style="font-size: 25px; font-weight:bold" update=":frmVenta :frmVentaDetalle :frmListaVenta">
+                            <p:confirm header="Confirmación" message="¿Deseas Registrar?" icon="pi pi-exclamation-triangle"/>
+                        </p:commandButton>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times"/>
+                        </p:confirmDialog>
+                    </p:panelGrid>
+                </center>
+                <p:separator/>
+                <center>
+                    <p:fieldset legend="LISTA DE VENTAS" toggleable="true" style="align-content: center; width: 70%">
+                        <p:dataTable var="lista" id="Listaventa" value="#{ventadetalleC.listaVenta}"
+                                     rows="5" paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                     rowsPerPageTemplate="5,10,15,20" style="width: 90%;">
+                            <f:facet name="header">
+                                <div style="float:right">
+
+                                    <p:commandButton value="EXCEL" icon="pi pi-file-excel" styleClass="rounded-button ui-button-secondary" style="font-weight:bold">
+                                        <p:dataExporter type="xls" target=":frmListaVenta:Listaventa" fileName="Lista de Clientes_XLS"/>
+                                    </p:commandButton>  
+                                    <p:commandButton value="GENERAR REPORTE" actionListener="#{ventadetalleC.reporteVenta()}"  onclick="this.form.target = '_blank'"
+                                                                         ajax="false" /> 
+                                </div>
+                            </f:facet>
+                            <f:facet name= "header"><center style="color:black; font-weight:bold; font-size:25px">LISTA DE VENTAS</center></f:facet>
+                            <p:column style="width:40px; color:black" headerText="ID VENTA" sortBy="#{lista.IDVEN}" filterBy="#{lista.IDVEN}">
+                                <h:outputText value="#{lista.IDVEN}"/>
+                            </p:column>
+                            <p:column style="width:50px; color:black" headerText="DNI" sortBy="#{lista.cliente.dni}" filterBy="#{lista.cliente.dni}">
+                                <h:outputText value="#{lista.cliente.dni}"/>
+                            </p:column>
+                            <p:column style="width:150px; color:black" headerText="CLIENTE" sortBy="#{lista.cliente.nombre}" filterBy="#{lista.cliente.nombre}">
+                                <h:outputText value="#{lista.cliente.nombre}"/>
+                            </p:column>
+                            <p:column style="width:60px; color:black" headerText="FECHA" sortBy="#{lista.FECVEN}" filterBy="#{lista.FECVEN}">
+                                <h:outputText value="#{lista.FECVEN}">                              
+                                </h:outputText>
+                            </p:column>                   
+                            <f:facet name="footer">
+                                <center style="color: black; font-weight:bold; font-size: 20px">
+                                    EN TOTAL HAY #{fn:length(ventadetalleC.listaVenta)} REGISTROS
+                                </center>
+                            </f:facet>
+                        </p:dataTable>
+                    </p:fieldset>
+                </center>
+            </h:form>
+
+
+            <h:form id="form">
+                <p:confirmPopup style="margin: initial" global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="Si" type="button" styleClass="ui-confirm-popup-yes" icon="pi pi-check" async="true"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-confirm-popup-no" icon="pi pi-times"/>
+                </p:confirmPopup>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times"/>
+                </p:confirmDialog>
+            </h:form>
+
+        </h:body>
+
+    </ui:define>
+
+</ui:composition>

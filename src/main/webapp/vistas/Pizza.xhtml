@@ -1,0 +1,194 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../resources/Plantilla.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+    <ui:define name="content">
+        <h:head>
+            <title>PIZZAS</title>
+            <f:event listener="#{pizzaC.listar()}" type="preRenderView" />
+        </h:head>
+        <h:body>
+            <p:growl id="mensaje" showDetail="true"/>
+            <p:growl id="growl-sticky" for="sticky-key" showDetail="true" sticky="true" />
+
+            <p:spacer height="0"/>  
+
+            <!-- Botón nuevo -->
+            <h:form>
+                <p:toolbar>
+                    <p:toolbarGroup>
+                        <p:commandButton value="Nuevo" icon="pi pi-plus" 
+                                         update=":RegPiz" oncomplete="PF('wdlgRegistro').show()"
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                            <p:resetInput target=":RegPiz"/>
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                    <p:toolbarGroup>
+                        <p:commandButton value="GENERAR REPORTE" actionListener="#{pizzaC.reporteVale()}"  onclick="this.form.target = '_blank'"
+                                         ajax="false" />
+                        <p:commandButton value="Excel" icon="pi pi-file-excel" styleClass="p-mr-2 p-mb-2">
+                            <p:dataExporter type="xls" target=":frmTablaPiz:tablaPiz" fileName="ListaDePizzas_XLS" pageOnly="true" />
+                        </p:commandButton>     
+                    </p:toolbarGroup>
+                </p:toolbar>
+            </h:form>
+
+
+            <center>    
+                <p:growl showDetail="true" id="messages" >
+                    <p:autoUpdate/> 
+                </p:growl>
+
+
+                <!--        Formulario del Prenda    >-->   
+                <p:dialog header="Registrar Pizza" widgetVar="wdlgRegistro" id="dlgRegistro">
+                    <h:form id="RegPiz" prependId="false">                 
+                        <p:panelGrid columns="3" >
+                            <p:outputLabel value="Nombre" />                    
+                            <p:inputText id="NOMPIZ" value="#{pizzaC.pizza.nombre}" required="true" requiredMessage="Digite el nombre de la pizza">
+                                <p:keyFilter regEx="/[A-Z_a-z_ñ_á_é_í_ó_ú_ ]/"/>
+                            </p:inputText>
+                            <p:message  for="NOMPIZ"/>
+
+                            <p:outputLabel value="Tamaño" />
+                            <p:inputText id="TAMPIZ" value="#{pizzaC.pizza.tamaño}" required="true" requiredMessage="Digite el Tamaño">
+                                <p:keyFilter regEx="/[A-Z_ ]/"/>
+                            </p:inputText>
+                            <p:message  for="TAMPIZ"/>
+
+                            <p:outputLabel value="Precio" />  
+                            <p:inputText id="PREPIZ" value="#{pizzaC.pizza.precio}" required="true" requiredMessage="Digite el precio">
+                                <p:keyFilter regEx="/[0-9_._$_ ]/"/>
+                            </p:inputText>
+                            <p:message  for="PREPIZ"/>
+                            
+                            <p:commandButton id="btnRegistrar" value="Registrar" actionListener="#{pizzaC.registrar()}"
+                                             update="RegPiz :frmTablaPiz:tablaPiz"                                          
+                                             oncomplete="if(!args.validationFailed)PF('wdlgRegistro').hide();">
+                                <p:confirm header="Confirmación" message="¿Deseas Registar?" icon="ui-icon-alert"/>
+                                <p:resetInput target="RegPiz"/>
+                            </p:commandButton>                 
+                            <p:commandButton value="Cancelar" immediate="true" oncomplete="PF('wdlgRegistro').hide();" />
+                        </p:panelGrid>   
+                    </h:form>
+                </p:dialog> 
+                <!--        Fin del Formulario Prenda    >-->
+
+
+
+                <p:spacer height="0"/>        
+
+                <!--        Listado de Prenda    >-->              
+                <h:form id="frmTablaPiz">
+                    <p:dataTable id="tablaPiz" var="lista" value="#{pizzaC.lstPizza}"
+                                 rows="10"
+                                 paginator="true" widgetVar="tblPizza" selection="#{pizzaC.pizza}"
+                                 resizableColumns="true"
+                                 selectionMode="single"
+                                 rowKey="#{lista.codigo}"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                 rowsPerPageTemplate="5,10,15,20,30,40"
+                                 rowStyleClass="registroVinculado" style="width:100%">   
+                        <f:facet name="header">
+                            <center><h1>Listado de Pizzas</h1></center>
+                            <div >
+                                <h:form>
+                                    <center>
+                                        <p:outputLabel value="FILTRO POR: " style="align-content: center; alignment-adjust: central; "/>
+
+                                        <p:selectOneMenu value="#{pizzaC.tipo}" style="width: 100px">
+                                            <f:selectItem itemValue="1" itemLabel="Activos"/> 
+                                            <f:selectItem itemValue="2" itemLabel="Inactivos"/>
+                                            <f:selectItem itemValue="3" itemLabel="Todos"/>
+                                            <p:ajax listener="#{pizzaC.listar()}" update=":frmTablaPiz:tablaPiz"/>
+                                        </p:selectOneMenu>
+                                    </center>
+                                </h:form>
+                            </div>
+
+                        </f:facet>
+
+                        <p:column headerText="Nombre" filterBy="#{lista.nombre}">
+                            <h:outputText value="#{lista.nombre}" />
+                        </p:column>
+                        <p:column headerText="Tamaño" style="width: 80px" filterBy="#{lista.tamaño}">
+                            <h:outputText value="#{lista.tamaño}" />
+                        </p:column>
+                        <p:column headerText="Precio" style="width: 80px" filterBy="#{lista.precio}">
+                            <h:outputText value="#{lista.precio}" />
+                        </p:column>
+                        <p:column style="width: 40px">
+                           
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                            </p:confirmDialog>
+                        </p:column>
+                        
+                        <f:facet name="footer">
+                            EN TOTAL HAY #{fn:length(pizzaC.lstPizza)} REGISTROS.
+                        </f:facet>
+                    </p:dataTable> 
+                    
+                    <p:contextMenu for="tablaPiz">
+                        <p:menuitem value="Modificar" icon="pi pi-pencil" oncomplete="PF('wdlgDatos').show()" update=":frmModificar">
+                        </p:menuitem>
+                        <p:menuitem value="Eliminar" icon="pi pi-trash" actionListener="#{pizzaC.eliminar()}" update=":frmTablaPiz:tablaPiz mensaje">
+                            <p:confirm header="Confirmación" message="¿Deseas eliminar?"/>                         
+                        </p:menuitem>
+                    </p:contextMenu>
+                </h:form>
+                
+
+
+                <!--        Dialogo Prenda    >-->
+                <p:dialog header="Datos de la Pizza" widgetVar="wdlgDatos" id="dlgDatos">
+                    <h:form id="frmModificar">
+                        <p:panelGrid columns="2" >
+                            <p:outputLabel value="Nombre" />
+                            <p:inputText value="#{pizzaC.pizza.nombre}" >
+                                <p:keyFilter regEx="/[A-Z_a-z_ñ_á_é_í_ó_ú_ ]/"/>
+                            </p:inputText>
+
+                            <p:outputLabel value="Tamaño" />
+                            <p:inputText value="#{pizzaC.pizza.tamaño}" >
+                                <p:keyFilter regEx="/[A-Z_a-z_ñ_á_é_í_ó_ú_ ]/"/>
+                            </p:inputText>   
+
+                            <p:outputLabel value="Precio" />
+                            <p:inputText value="#{pizzaC.pizza.precio}" >
+                                <p:keyFilter regEx="/[0-9_._$_ ]/"/>
+                            </p:inputText>   
+
+                        
+                    
+
+                            <p:commandButton id="btnModificar" value="Modificar" actionListener="#{pizzaC.modificar()}" 
+                                             update="frmModificar :frmTablaPiz:tablaPiz" 
+                                             oncomplete="if(!args.validationFailed)PF('wdlgDatos').hide();">
+                                <p:confirm header="Confirmación" message="¿Deseas Modificar?" icon="ui-icon-alert"/>
+                            </p:commandButton>  
+                            <p:commandButton value="Cancelar" immediate="true" oncomplete="PF('wdlgDatos').hide();" />
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                            </p:confirmDialog>
+                        </p:panelGrid> 
+                    </h:form>
+
+                </p:dialog>
+                <!--        Fin del Dialogo Prenda    >-->
+
+            </center>
+        </h:body>
+        <!--    <h:outputScript library="js" name="..//resources/js/spanishLocales.js"/>-->
+    </ui:define>
+
+</ui:composition>
